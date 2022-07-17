@@ -67,6 +67,8 @@ void gen_food_pos(int* row, int* column,
 			*row = 1;
 		} else if(*row == 1) {
 			*row = length - 2;
+		} else {
+			*row = 1;
 		}
 	}
 }

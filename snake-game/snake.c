@@ -36,24 +36,25 @@ int main() {
 		left = (c == 'a' && snake_column > 1) || (esc == 2 && c == 'D' && snake_column > 1);
 		right = (c == 'd' && snake_column < width-2) || (esc == 2 && c == 'C' && snake_column < width-2);
 		*/
-		up = (c == 'w' || (esc == 2 && c == 'A')) && snake_row > 1;
-		down = (c == 's' || (esc == 2 && c == 'B')) && snake_row < length-2;
-		left = (c == 'a' || (esc == 2 && c == 'D')) && snake_column > 1;
-		right = (c == 'd' || (esc == 2 && c == 'C')) && snake_column < width-2;
+		up = (c == 'w' || (esc == 2 && c == 'A'));
+		down = (c == 's' || (esc == 2 && c == 'B'));
+		left = (c == 'a' || (esc == 2 && c == 'D'));
+		right = (c == 'd' || (esc == 2 && c == 'C'));
 		if(c == '\033') {
 			esc = 1;
 		} else if(esc == 1 && c == '[') {
-			esc = 2;
-		} else if(up) {
+			esc = 2;	
+		} else if(up && snake_row > 1) {
 			// get rid of the snake at the current position
 			board[snake_row][snake_column] = ' ';
 			printf("\033[%dD%s", width,
 				board[snake_row--]);
 			// move the snake to the new position upwards
 			board[snake_row][snake_column] = '#';
-			printf("\033[A\033[%dD%s",
+			printf("\033[A\033[%dD%s\033[0m",
 				width,
 				board[snake_row]);
+			// increase the score if the snake touches the food
 			if(snake_row == food_row && snake_column == food_column) {
 				score++;
 				printf("\033[%dD\033[%dAScore: %d", width, length - ((length-1) - snake_row), score);
@@ -70,7 +71,7 @@ int main() {
 				}
 			}
 			esc = 0;
-		} else if(down) {
+		} else if(down && snake_row < length-2) {
 			board[snake_row][snake_column] = ' ';
 			printf("\033[%dD%s", width,
 				board[snake_row++]);
@@ -94,7 +95,7 @@ int main() {
 				}
 			}
 			esc = 0;
-		} else if(left) {
+		} else if(left && snake_column > 1) {
 			board[snake_row][snake_column--] = ' ';
 			board[snake_row][snake_column] = '#';
 			printf("\033[%dD%s",
@@ -116,7 +117,7 @@ int main() {
 				}
 			}
 			esc = 0;
-		} else if(right) {
+		} else if(right && snake_column < width-2) {
 			board[snake_row][snake_column++] = ' ';
 			board[snake_row][snake_column] = '#';
 			printf("\033[%dD%s",
@@ -143,6 +144,12 @@ int main() {
 				(length+1) - snake_row,
 				width
 			);
+			break;
+		} else if(up || down || right || left) {
+			// if the snake_column or row isn't true in one of the if statements this will be executed
+			printf("\033[%dB\033[%dDYou lose!\n",
+				(length+1) - snake_row,
+				width);
 			break;
 		}
 	}
