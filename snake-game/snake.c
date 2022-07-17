@@ -21,7 +21,7 @@ int main() {
 	board[food_row][food_column] = 'o';
 	printf("%d x %d\n", length, width);
 	printf("Score: 0\n");
-	print_board(board, length);
+	print_board(board, length, width, snake_row, snake_column);
 	printf("Use arrow keys or w, a, s, d keys to move, "
 			"press q to quit\n");
 	printf("\033[%dA", (length - (snake_row+1)) + 2);
@@ -51,9 +51,11 @@ int main() {
 				board[snake_row--]);
 			// move the snake to the new position upwards
 			board[snake_row][snake_column] = '#';
-			printf("\033[A\033[%dD%s\033[0m",
+			/*printf("\033[A\033[%dD%s\033[0m",
 				width,
-				board[snake_row]);
+				board[snake_row]);*/
+			printf("\033[A");
+			print_snake_row(board, width, snake_row, snake_column);
 			// increase the score if the snake touches the food
 			if(snake_row == food_row && snake_column == food_column) {
 				score++;
@@ -76,9 +78,8 @@ int main() {
 			printf("\033[%dD%s", width,
 				board[snake_row++]);
 			board[snake_row][snake_column] = '#';
-			printf("\033[B\033[%dD%s",
-				width,
-				board[snake_row]);
+			printf("\033[B");
+			print_snake_row(board, width, snake_row, snake_column);
 			if(snake_row == food_row && snake_column == food_column) {
 				score++;
 				printf("\033[%dD\033[%dAScore: %d", width, (length+1) - (length - snake_row), score);
@@ -98,11 +99,9 @@ int main() {
 		} else if(left && snake_column > 1) {
 			board[snake_row][snake_column--] = ' ';
 			board[snake_row][snake_column] = '#';
-			printf("\033[%dD%s",
-				width,
-				board[snake_row]);
+			print_snake_row(board, width, snake_row, snake_column);
 			if(snake_row == food_row && snake_column == food_column) {
-				score++;
+			score++;
 				printf("\033[%dD\033[%dAScore: %d", width, length - ((length-1) - snake_row), score);
 				printf("\033[%dB", length - ((length-1) - snake_row));
 				gen_food_pos(&food_row, &food_column,
@@ -120,9 +119,7 @@ int main() {
 		} else if(right && snake_column < width-2) {
 			board[snake_row][snake_column++] = ' ';
 			board[snake_row][snake_column] = '#';
-			printf("\033[%dD%s",
-				width,
-				board[snake_row]);
+			print_snake_row(board, width, snake_row, snake_column);
 			if(snake_row == food_row && snake_column == food_column) {
 				score++;
 				printf("\033[%dD\033[%dAScore: %d", width, length - ((length-1) - snake_row), score);
@@ -145,13 +142,13 @@ int main() {
 				width
 			);
 			break;
-		} else if(up || down || right || left) {
+		} /*else if(up || down || right || left) {
 			// if the snake_column or row isn't true in one of the if statements this will be executed
 			printf("\033[%dB\033[%dDYou lose!\n",
 				(length+1) - snake_row,
 				width);
 			break;
-		}
+		}*/
 	}
 	set_tio(&old_tio); // unset tty from raw mode
 	for(int i=0;i<length;i++) { free(board[i]); }

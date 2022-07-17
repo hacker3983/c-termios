@@ -72,9 +72,22 @@ void gen_food_pos(int* row, int* column,
 		}
 	}
 }
-void print_board(char** board, int length) {
+void print_board(char** board, int length, int width, int snake_row, int snake_column) {
 	for(int i=0;i<length;i++) {
-		printf("%s\n", board[i]);	
+		printf("%s\n", board[i]);
+		if(i == snake_row) {
+			printf("\033[A\033[%dC\033[32m#\033[0m", snake_column);
+			printf("\033[B\033[%dD", snake_column+1);
+			fflush(stdout);
+		}
 	}
+}
+
+void print_snake_row(char** board, int width, int snake_row, int snake_column) {
+	printf("\033[%dD%s", width, board[snake_row]); // print the current snake row
+	printf("\033[%dD\033[32m#\033[0m", width - snake_column); // change the color of the snake
+	printf("\033[%dC", width - (snake_column+1));
+	fflush(stdout);
+//	sleep(10);
 }
 #endif
