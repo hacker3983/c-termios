@@ -105,13 +105,12 @@ void edit_file(const char* filename) {
 			if(n == 0 && line > 1) {
 				line--; lines_count--;
 				n = strlen(lines.list[line-1]);
-				column = 0;
-				printf("\033[A\033[%ldC", n);
+				column = n-1;
+				printf("\033[A\033[%ldC", n-1);
 			} else {
-				lines.list[line-1][n-1] = 0; // set the last position of the character to null
-				column = 0;
-				printf("\033[1K\033[%ldD", n);
-				printf("%s", lines.list[line-1]);
+				lines.list[line-1][column] = 0; // set the last position of the character to null
+				column = n-1;
+				printf("\033[D\033[X%s", );
 			}
 		} else if(isgraph(c)) {
 		}

@@ -16,7 +16,7 @@ void string_init(string_t* string) {
 }
 
 void string_append(string_t* string, char* buff) {
-	string->list[string->size] = calloc(strlen(buff), sizeof(char*));
+	string->list[string->size] = calloc(strlen(buff)+1, sizeof(char*));
 	strcpy(string->list[string->size], buff);
 	string->size++;
 	string->list = realloc(string->list, (string->size+1) * sizeof(char*));
