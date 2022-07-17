@@ -136,6 +136,7 @@ int main() {
 			break;
 		}
 	}
+	free(ans); ans = NULL;
 	set_tio(&old_tio);
 	return 0;
 }
